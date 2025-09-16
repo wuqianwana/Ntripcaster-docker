@@ -11,7 +11,6 @@ wget -O /etc/ntripcaster/clientmounts.aut https://raw.githubusercontent.com/wuqi
 wget -O /etc/ntripcaster/sourcemounts.aut https://raw.githubusercontent.com/wuqianwana/Ntripcaster-docker/master/conf/sourcemounts.aut
 wget -O /etc/ntripcaster/sourcetable.dat https://raw.githubusercontent.com/wuqianwana/Ntripcaster-docker/master/conf/sourcetable.dat
 wget -O /etc/ntripcaster/ntripcaster.conf https://raw.githubusercontent.com/wuqianwana/Ntripcaster-docker/master/conf/ntripcaster.conf
-wget -O /etc/ntripcaster/mountpos.conf https://raw.githubusercontent.com/wuqianwana/Ntripcaster-docker/master/conf/mountpos.conf
 
 wget -O /docker/ntripcaster/docker-compose.yml https://raw.githubusercontent.com/wuqianwana/Ntripcaster-docker/master/docker-compose.yml
 
