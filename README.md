@@ -53,6 +53,34 @@ read_gpgga_interval 15
 /test:usera:abc,userb:def
 /pub
 ```
+### 源表.dat
+
+该文件位于 conf 目录（ntripcaster/ntripcaster/conf）中。您需要根据自己的需要对其进行编辑。
+
+BKG 的说明称：“无论您的“sourcetable.dat”最终的内容是什么，建议在该配置文件中包含以下行：CAS;rtcm-ntrip.org;2101;NtripInfoCaster;BKG;0;DEU;50.12;8.69; http://www.rtcm-ntrip.org/home ”。
+
+该行已在示例源表文件中，因此您可以保留它。
+
+除了第一行之外，sourcetable.dat 还定义了你的挂载点。每个基站都需要一个。我有一个基站，它位于我位于英国莱瑟黑德的棚屋屋顶上。我将我的挂载点命名为“uk_leatherhead”。
+
+sourcetable.dat 的每一行都是一个用分号分隔的字段列表。我的代码如下：
+```
+CAS;rtcm-ntrip.org;2101;NtripInfoCaster;BKG;0;DEU;50.12;8.69;http://www.rtcm-ntrip.org/home
+STR;uk_leatherhead;Leatherhead;RTCM 3.0;;;;;GBR;51.29;-0.32;1;0;sNTRIP;none;N;N;0;;
+```
+
+第二行的字段 1 是“STR”，表示它正在定义一个挂载点。
+
+字段 2“uk_leatherhead”是我的挂载点的名称。
+
+3 号场地“莱瑟黑德”是距离我的基站最近的城镇。
+
+RTCM 3.0 意味着 NTRIP 连接正在携带 RTCM 版本 3 消息，这是我的基站生成的消息。
+
+GBR 是英国的三字母代码。您可以 在这里找到您所在国家/地区的两字母和三字母代码。
+
+“51.29;-0.32”给出了我的基站的经度和纬度。如果您没有这些信息，可以使用“0.00;0.00”。
+
 
 - ntripcaster.conf,   主配置
 - clientmounts.aut,   客户端的流身份验证
