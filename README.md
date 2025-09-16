@@ -8,7 +8,7 @@ NTRIP 由德国联邦制图和大地测量局 (BKG) 发明。它用于通过互�
 ## 准备配置
 首先你必须在主机上准备一些配置：
 ```shell
-$ wget -O config.sh https://raw.githubusercontent.com/rinex20/ntripcaster_docker/master/config.sh
+$ wget -O config.sh https://raw.githubusercontent.com/wuqianwana/Ntripcaster-docker/master/config.sh
 ```
 
 然后：
