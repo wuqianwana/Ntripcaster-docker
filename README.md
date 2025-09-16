@@ -23,6 +23,35 @@ $ chmod +x config.sh && ./config.sh
 $ vim /etc/ntripcaster/ntripcaster.conf
 ```
 
+### 编辑 ntripcaster.conf
+在施法者元数据中输入您的详细信息
+```
+location your_location
+rp_email your_email@my.domain.com
+server_url http://my.domain.com
+```
+输入 ntrip 服务器将数据推送到 Caster 时使用的密码。无需用户名。
+```
+encoder_password yourPassword
+```
+输入施放者的域名，例如，测试时输入 localhost，实际使用时输入 my.domain.com。此域名不能是 IP 地址。选择要使用的端口 - 标准端口为 2101，但您可以使用任何您喜欢的端口。
+```
+server_name localhost
+#port 80
+port 2101
+```
+mountpos 设置用于最近的基准功能。将 `auto_mount` 设置为 `false` 以禁用它。
+```
+mountposfile /usr/local/ntripcaster/conf/mountpos.conf
+auto_mount true
+read_gpgga_interval 15
+```
+挂载点用户名和密码遵循以下格式：只有用户“usera”和密码“abc”或“userb”和密码“def”可以访问“test”。任何用户都可以访问“pub”。请根据个人喜好进行调整。
+```
+/test:usera:abc,userb:def
+/pub
+```
+
 - ntripcaster.conf,   主配置
 - clientmounts.aut,   客户端的流身份验证
 - sourcemounts.aut,   源的流身份验证（Ntrip 2.0）
