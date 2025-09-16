@@ -1,6 +1,8 @@
 # Ntripcaster-docker
 此项目是由BGK开源NTRIP Caster在Docker下运行
 
+目前使用的BKG-Ntripcaster版本为2.0.47（2025-01-07）
+
 该存储库包含在 docker 下运行的 BKG NTRIP 播发器。
 
 NTRIP 由德国联邦制图和大地测量局 (BKG) 发明。它用于通过互联网将 GNSS 基站的校正数据传输到 GNSS 流动站。（GNSS 是我们通常所说的 GPS 的统称。）
