@@ -23,12 +23,12 @@ $ chmod +x config.sh && ./config.sh
 $ vim /etc/ntripcaster/ntripcaster.conf
 ```
 
-- ntripcaster.conf,   main configuration
-- clientmounts.aut,   stream authentication for ntrip clients
-- sourcemounts.aut,   stream authentication for ntrip sources (Ntrip 2.0)
-- users.aut,          user definitions
-- groups.aut,        group definitions
-- sourcetable.dat,    the sourcetable containing stream information
+- ntripcaster.conf,   主配置
+- clientmounts.aut,   客户端的流身份验证
+- sourcemounts.aut,   源的流身份验证（Ntrip 2.0）
+- users.aut,          用户定义
+- groups.aut,         组定义
+- sourcetable.dat,    包含流信息的源表
 
 如果您想使用经过用户和密码验证的流，则需要相应地编辑 .aut 文件。
 
