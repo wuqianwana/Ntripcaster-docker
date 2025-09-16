@@ -7,6 +7,8 @@
 
 NTRIP 由德国联邦制图和大地测量局 (BKG) 发明。它用于通过互联网将 GNSS 基站的校正数据传输到 GNSS 流动站。（GNSS 是我们通常所说的 GPS 的统称。）
 
+BKG使用说明书网址https://igs.bkg.bund.de/root_ftp/NTRIP/documentation/ntripcaster_manual.html
+
 ## 准备配置
 首先你必须在主机上准备一些配置：
 ```shell
