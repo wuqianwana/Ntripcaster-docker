@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install build-essential --assume-yes
 
 RUN ./configure
 
+RUN make
+
 RUN make install
 
 # 构建器镜像被转储并使用新镜像
