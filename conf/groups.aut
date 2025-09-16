@@ -1,0 +1,17 @@
+# 组身份验证文件。
+# 此处列出所有组及其成员（用户），每个组占一行。
+#
+# 语法：<GROUP>:<USER1>,<USER2>,...,<USERn>[:<MAX_NUM_CON>]
+#
+# <GROUP>：组名称。
+# <USERi>：属于 <GROUP> 的用户的名称。
+# <MAX_NUM_CON>：<GROUP> 的最大同时连接数（可选）。如果未指定，则允许无限数量的连接。
+
+# 普通用户组
+gpsclient:gps1,gps2,gps3,gps4,gps5,gps6
+
+#上传者组
+uploader:uploader0,uploader1
+
+#管理组
+FirstAdmin:admin
