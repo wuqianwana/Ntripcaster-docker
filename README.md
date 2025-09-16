@@ -98,3 +98,6 @@ GBR 是英国的三字母代码。您可以 在这里找到您所在国家/地�
 ```shell
 $ docker run -d -p 2101:2101 --name ntripcaster --restart=always -v /etc/ntripcaster:/etc/ntripcaster rinex20/ntripcaster
 ```
+```shell
+docker run -d -p 2101:2101 --restart=always -v /etc/ntripcaster:/etc/ntripcaster ntripcaster
+```
