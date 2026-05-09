@@ -2,7 +2,7 @@
 
 Summary:        BKG professional Ntrip caster - Streaming DGPS data server
 Name:           ntripcaster
-Version:        2.0.47
+Version:        2.0.48
 Release:        1
 Packager:       Dirk Stöcker <ntripcaster@dstoecker.de>
 Group:          Productivity/Other
@@ -40,10 +40,16 @@ Version 2. The main advantages over NTRIP Version 1.0 include:
 * Optional support of RTSP/RTP and UDP
 
 %prep
+echo "Active versions: suse_version " 0%{?suse_version} " sle_version " 0%{?sle_version} " is_opensuse " 0%{?is_opensuse} " fedora_version " 0%{?fedora_version} " rhel_version " 0%{?rhel_version} " centos_version " 0%{?centos_version}
 %setup
 
 %build
 export CFLAGS="%{optflags} %{cflags}"
+%if 0%{?suse_version} >= 1600
+sed -i -e s#/var/run/#/run/# configure
+sed -i -e /var-run.mount/d scripts/ntripcaster.service.in
+%endif
+
 if [ ! -f configure ]; then
   ./autogen.sh --enable-fsstd
 else

@@ -1,3 +1,7 @@
+2.0.47 --> 2.0.48
+*****************
+- support security.txt
+
 2.0.46 --> 2.0.47
 *****************
 - Add configuration file option read_timeout (in seconds), defaults to 16

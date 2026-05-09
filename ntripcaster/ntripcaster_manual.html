@@ -548,14 +548,15 @@
     <i>groups.aut</i>, <i>clientmounts.aut</i>,
     <i>sourcemounts.aut</i>, and <i>sourcetable.dat</i>. They become active through Admin Web Interface commands.
     <ul>
-        <li>Command <span class="cmd">http://NtripCasterIP:Port/admin?mode=rehash</span>
+	    <li>Command <span class="cmd">http://NtripCasterIP:Port/admin?mode=<b>rehash</b></span>
             activates additions to <i>ntripcaster.conf</i>, users.aut, <i>groups.aut</i>, <i>clientmounts.aut</i>,
             <i>sourcemounts.aut</i>, and <i>sourcetable.dat</i>. Note that the NtripCaster process is kept alive during
             that procedure. Because of this re-configuration on-the-fly, incoming and outgoing streams remain
-            undisturbed.
+	    undisturbed. A <b>rehash</b> therefore only makes sense for changes to <b>non-active data streams</b>.
+	    All changes to already <b>active data streams</b> require a <b>resync</b> command.
         </li>
 
-        <li>Command <span class="cmd">http://NtripCasterIP:Port/admin?mode=resync</span>
+	<li>Command <span class="cmd">http://NtripCasterIP:Port/admin?mode=<b>resync</b></span>
             causes a shut-down and restart of the NtripCaster executable and thus activates changes as well as
             additions to <i>ntripcaster.conf</i>, <i>users.aut</i>, <i>groups.aut</i>, <i>clientmounts.aut</i>,
             <i>sourcemounts.aut</i>, and <i>sourcetable.dat</i>.
