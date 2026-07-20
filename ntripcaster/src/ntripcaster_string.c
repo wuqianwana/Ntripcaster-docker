@@ -481,7 +481,7 @@ skip_before (const char *ptr, const char *search)
 const char *
 skip_after (const char *ptr, const char *search)
 {
-  char *hit = strstr (ptr, search);
+  const char *hit = strstr (ptr, search);
   if (hit)
     return (const char *)hit + ntripcaster_strlen (search);
   else
@@ -531,14 +531,14 @@ char *makeasciihost(const struct in_addr *in, char *buf)
 }
 
 char *
-nntripcaster_time_minutes (unsigned long int minutes, char *buf)
+ntripcaster_time_minutes (unsigned long int minutes, char *buf)
 {
   unsigned long int days, hours, remains;
 //  char buf2[BUFSIZE];
 
   if (!buf)
   {
-    write_log (LOG_DEFAULT, "ERROR: nntripcaster_time_minutes called with NULL argument");
+    write_log (LOG_DEFAULT, "ERROR: ntripcaster_time_minutes called with NULL argument");
     return NULL;
   }
 
@@ -686,7 +686,7 @@ ntripcaster_strcasecmp (const char *s1, const char *s2)
 #endif
 }
 
-char*
+const char*
 ntripcaster_strstr (const char* haystack, const char* needle)
 {
   if (!needle || !haystack) {

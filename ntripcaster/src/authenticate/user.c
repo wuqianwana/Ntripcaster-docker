@@ -282,61 +282,6 @@ ntripcaster_user_t * find_user_from_tree(usertree_t * ut, char *name) {
   return avl_find(ut, &search);
 }
 
-ntripcaster_user_t *con_get_user(connection_t * con) {
-  ntripcaster_user_t *outuser = NULL;
-  const char *cauth;
-  char *decoded, *ptr;
-  char cryptype[BUFSIZE];
-  char user[BUFSIZE];
-  char auth[BUFSIZE];
-  char pass[BUFSIZE];
-
-  if (con == NULL) {
-    xa_debug(1, "WARNING: con_get_user() called with NULL pointer");
-    return NULL;
-  }
-
-  cauth = get_con_variable(con, "Authorization");
-
-  if (cauth == NULL) return NULL;
-
-  strcpy(auth, cauth);
-
-  if (splitc(cryptype, auth, ' ') == NULL) {
-    xa_debug(1, "DEBUG: con_get_user() uncrypted: [%s]", auth);
-    if (splitc(user, auth, ':') == NULL) {
-      strcpy(user, auth);
-      pass[0] = '\0';
-    } else {
-      strcpy(pass, auth);
-    }
-  } else {
-    if (strncasecmp(cryptype, "basic", 5) == 0) {
-      xa_debug(1, "DEBUG: con_get_user() decoding: [%s]", auth);
-      ptr = decoded = util_base64_decode(auth);
-      if (decoded != NULL) {
-        xa_debug(1, "DEBUG: con_get_user() decoded: [%s]", decoded);
-        if (splitc(user, decoded, ':') == NULL) {
-          strcpy(user, decoded);
-          pass[0] = '\0';
-        } else {
-          strcpy(pass, decoded);
-        }
-        free(ptr);
-      } else return NULL;
-    } else {
-      xa_debug(1, "WARNING: con_get_user(): unsupported cryptype");
-      return NULL;
-    }
-  }
-
-  outuser = (ntripcaster_user_t *)nmalloc(sizeof(ntripcaster_user_t));
-  outuser->name = strdup(user);
-  outuser->pass = strdup(pass);
-
-  return outuser;
-}
-
 void con_display_users(com_request_t * req)
 {
   ntripcaster_user_t *user;

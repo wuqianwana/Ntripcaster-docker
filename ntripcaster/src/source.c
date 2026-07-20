@@ -153,31 +153,31 @@ void http_source_login(connection_t *con, ntrip_request_t *req) {
 #ifdef HAVE_LIBWRAP
   if (con->sock > 0 && !sock_check_libwrap (con->sock, source_e)) {
     ntrip_write_message(con, HTTP_FORBIDDEN, get_formatted_time(HEADER_TIME, time));
-    kick_not_connected (con, "Access denied (tcp wrappers)");
+    kick_not_connected (con, req->path, "Access denied (tcp wrappers)");
     return;
   }
 #endif
   if (!allowed (con, source_e)) {
     ntrip_write_message(con, HTTP_FORBIDDEN, get_formatted_time(HEADER_TIME, time));
-    kick_not_connected (con, "Access denied (internal acl list, source connection)");
+    kick_not_connected (con, req->path, "Access denied (internal acl list, source connection)");
     return;
   }
 
   if (strncasecmp(get_source_agent(con), "ntrip", 5) != 0) { // rtsp
     ntrip_write_message(con, HTTP_FORBIDDEN, get_formatted_time(HEADER_TIME, time));
-    kick_not_connected (con, "No NTRIP source");
+    kick_not_connected (con, req->path, "No NTRIP source");
     return;
   }
 
   if (authenticate_source_request(con, req) != 1) {
     ntrip_write_message(con, HTTP_SOURCE_NOT_AUTHORIZED, get_formatted_time(HEADER_TIME, time),req->path, "text/html");
-    kick_not_connected (con, "Unauthorized source");
+    kick_not_connected (con, req->path, "Unauthorized source");
     return;
   }
 
   if (is_empty_request(req)) {
     ntrip_write_message(con, HTTP_BAD_REQUEST, get_formatted_time(HEADER_TIME, time));
-    kick_not_connected(con, "Empty source request");
+    kick_not_connected(con, req->path, "Empty source request");
     return;
   }
 
@@ -980,7 +980,7 @@ describe_source (const com_request_t *req, const connection_t *sourcecon)
   admin_write_line (req, ADMIN_SHOW_DESCRIBE_SOURCE_MISC, "KBytes read: %lu", source->stats.read_kilos);
   admin_write_line (req, ADMIN_SHOW_DESCRIBE_SOURCE_MISC, "KBytes written: %lu", source->stats.write_kilos);
   admin_write_line (req, ADMIN_SHOW_DESCRIBE_SOURCE_MISC, "Client connections: %lu", source->stats.client_connections);
-  admin_write_line (req, ADMIN_SHOW_DESCRIBE_SOURCE_MISC, "Client connect time: %s", nntripcaster_time_minutes (source->stats.client_connect_time, buf));
+  admin_write_line (req, ADMIN_SHOW_DESCRIBE_SOURCE_MISC, "Client connect time: %s", ntripcaster_time_minutes (source->stats.client_connect_time, buf));
   admin_write_line (req, ADMIN_SHOW_DESCRIBE_SOURCE_MISC, "Average client connect time: %s", connect_average (source->stats.client_connect_time, source->stats.client_connections, buf));
   admin_write_line (req, ADMIN_SHOW_DESCRIBE_SOURCE_MISC, "Average client transfer: %lu", transfer_average (source->stats.write_kilos, source->stats.client_connections));
 

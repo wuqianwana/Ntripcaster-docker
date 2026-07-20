@@ -125,7 +125,7 @@ void *handle_connection(void *arg) {
 
   if (!allowed_no_policy (con, unknown_connection_e)) {
     ntrip_write_message(con, HTTP_FORBIDDEN, get_formatted_time(HEADER_TIME, time));
-    kick_not_connected (con, "Access denied (internal acl list, generic connection)");
+    kick_not_connected (con, 0, "Access denied (internal acl list, generic connection)");
     thread_exit(0);
     return NULL;
   }
@@ -137,7 +137,7 @@ void *handle_connection(void *arg) {
     /* Fill line[] with the user header, ends with \n\n */
     if ((res = sock_read_lines_with_timeout(con->sock, line, BUFSIZE)) <= BUFSIZE) {
       write_log(LOG_DEFAULT, "handle_connnection(): Socket error on connection %d", con->id);
-      kick_not_connected(con, "Socket error");
+      kick_not_connected(con, 0, "Socket error");
       thread_exit(0);
       return NULL;
     }
@@ -155,7 +155,7 @@ void *handle_connection(void *arg) {
   }
   if (ntrip_read_header(con, line, &req) != 1) {
     ntrip_write_message(con, HTTP_BAD_REQUEST, get_formatted_time(HEADER_TIME, time));
-    kick_not_connected(con, "Invalid header");
+    kick_not_connected(con, 0, "Invalid header");
     thread_exit(0);
     return NULL;
   }
@@ -167,7 +167,7 @@ void *handle_connection(void *arg) {
   }
 
   ntrip_write_message(con, HTTP_NOT_IMPLEMENTED, get_formatted_time(HEADER_TIME, time));
-  kick_not_connected(con, "Method not implemented");
+  kick_not_connected(con, 0, "Method not implemented");
 
   thread_exit(0);
   return NULL;
@@ -274,7 +274,7 @@ get_connection (sock_t *sock)
 #ifdef HAVE_LIBWRAP
     if (!sock_check_libwrap(sockfd, unknown_connection_e))
     {
-      kick_not_connected (con, "Access denied (tcp wrappers) [generic connection]");
+      kick_not_connected (con, 0, "Access denied (tcp wrappers) [generic connection]");
       return NULL;
     }
 #endif
@@ -476,7 +476,7 @@ connection_t *get_nontrip_connection() { // nontrip.
 
 #ifdef HAVE_LIBWRAP
   if (!sock_check_libwrap(sockfd, unknown_connection_e)) {
-    kick_not_connected (con, "Access denied (tcp wrappers) [generic connection]");
+    kick_not_connected (con, 0, "Access denied (tcp wrappers) [generic connection]");
     return NULL;
   }
 #endif

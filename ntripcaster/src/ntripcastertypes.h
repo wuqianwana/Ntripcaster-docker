@@ -150,7 +150,7 @@ typedef struct http_variableSt
 
 typedef struct varpair_St
 {
-  char *name;
+  const char *name;
   char *value;
 } varpair_t;
 
@@ -175,6 +175,11 @@ typedef struct ntrip_request_St {
   int cseq;
   long int sessid;
 } ntrip_request_t;
+
+typedef struct userSt {
+  char *name;
+  char *pass;
+} ntripcaster_user_t;
 
 typedef struct alias_St
 {

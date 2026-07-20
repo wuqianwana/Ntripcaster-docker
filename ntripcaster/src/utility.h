@@ -39,6 +39,7 @@
 #ifndef __NTRIPCASTER_UTILITY_H
 #define __NTRIPCASTER_UTILITY_H
 
+ntripcaster_user_t *con_get_user(connection_t * con);
 char *clean_string_from_spaces(char *string);
 char *clean_string_from_leading_spaces(char *string);
 void clean_away_source(source_t *source);
@@ -55,7 +56,7 @@ void kick_connection_not_me (void *conarg, void *reasonarg);
 void kick_connection(void *conarg, void *reasonarg);
 void kick_everything();
 void kick_if_match (char *pattern);
-void kick_not_connected (connection_t *con, char *reason);
+void kick_not_connected (connection_t *con, const char *path, const char *reason);
 void kick_silently (connection_t *con);
 connection_t *get_admin_with_id(int id);
 void close_connection(void *data);

@@ -144,19 +144,19 @@ void http_client_login(connection_t *con, ntrip_request_t *req) {
 
   if (info.throttle_on) {
     ntrip_write_message(con, HTTP_NOT_ACCEPTABLE, get_formatted_time(HEADER_TIME, time));
-    kick_not_connected (con, "Bandwidth usage too high (throttling)");
+    kick_not_connected (con, req->path, "Bandwidth usage too high (throttling)");
     return;
   }
 #ifdef HAVE_LIBWRAP
   if (con->sock > 0 && !sock_check_libwrap (con->sock, client_e)) {
     ntrip_write_message(con, HTTP_FORBIDDEN, get_formatted_time(HEADER_TIME, time));
-    kick_not_connected (con, "Access denied (tcp wrappers)");
+    kick_not_connected (con, req->path, "Access denied (tcp wrappers)");
     return;
   }
 #endif
   if (!allowed(con, client_e)) {
     ntrip_write_message(con, HTTP_FORBIDDEN, get_formatted_time(HEADER_TIME, time));
-    kick_not_connected (con, "Access denied (internal acl list, client connection)");
+    kick_not_connected (con, req->path, "Access denied (internal acl list, client connection)");
     return;
   }
 
@@ -165,33 +165,33 @@ void http_client_login(connection_t *con, ntrip_request_t *req) {
       con->com_protocol = ntrip2_0_e;
     if(con->udpbuffers && !info.sourcetable_via_udp)
     {
-      kick_not_connected (con, "No sourcetable via UDP allowed");
+      kick_not_connected (con, req->path, "No sourcetable via UDP allowed");
       return;
     }
     send_sourcetable(con);
-    kick_not_connected (con, "Transfer sourcetable");
+    kick_not_connected (con, req->path, "Transfer sourcetable");
     return;
   }
 
   if (!strncasecmp((req->path)+1,"?filter",7)) {
     if(con->udpbuffers && !info.sourcetable_via_udp)
     {
-      kick_not_connected (con, "No sourcetable via UDP allowed");
+      kick_not_connected (con, req->path, "No sourcetable via UDP allowed");
       return;
     }
     send_sourcetable_filtered(con, (req->path)+1+7,0);
-    kick_not_connected (con, "Transfer filtered sourcetable");
+    kick_not_connected (con, req->path, "Transfer filtered sourcetable");
     return;
   }
 
   if (!strncasecmp((req->path)+1,"?match",6)) {
     if(con->udpbuffers && !info.sourcetable_via_udp)
     {
-      kick_not_connected (con, "No sourcetable via UDP allowed");
+      kick_not_connected (con, req->path, "No sourcetable via UDP allowed");
       return;
     }
     send_sourcetable_filtered(con, (req->path)+1+6,1);
-    kick_not_connected (con, "Transfer matched sourcetable");
+    kick_not_connected (con, req->path, "Transfer matched sourcetable");
     return;
   }
 
@@ -199,32 +199,32 @@ void http_client_login(connection_t *con, ntrip_request_t *req) {
   if (!strncasecmp((req->path)+1,"?auth",5) ||!strncasecmp((req->path)+1,"?strict",7)) {
     ntrip_write_message(con, HTTP_NOT_IMPLEMENTED,
       get_formatted_time(HEADER_TIME, time));
-    kick_not_connected (con, "auth and strict not implemented for sourcetable");
+    kick_not_connected (con, req->path, "auth and strict not implemented for sourcetable");
     return;
   }
 
   if (!authenticate_user_request (con, req, client_e)) {
     ntrip_write_message(con, HTTP_GET_NOT_AUTHORIZED, get_formatted_time(HEADER_TIME, time), req->path, "text/html");
-    kick_not_connected (con, "Not authorized");
+    kick_not_connected (con, req->path, "Not authorized");
     return;
   }
 
   if (strncasecmp(get_user_agent(con), "ntrip", 5) != 0) {
     if ((ntripcaster_strncmp(req->path, "/home", 5) == 0)) {
       http_display_home_page (con);
-      kick_not_connected (con, "Home page displayed");
+      kick_not_connected (con, req->path, "Home page displayed");
       return;
     } else if ((ntripcaster_strncmp(req->path, "/favicon.ico", 12) == 0)) {
       http_get_favicon (con);
-      kick_not_connected (con, "Favicon delivered");
+      kick_not_connected (con, req->path, "Favicon delivered");
       return;
     } else if ((ntripcaster_strncmp(req->path, "/robots.txt", 11) == 0)) {
       http_get_robots (con);
-      kick_not_connected (con, "Robots.txt delivered");
+      kick_not_connected (con, req->path, "Robots.txt delivered");
       return;
     } else if ((ntripcaster_strncmp(req->path, "/security.txt", 13) == 0)) {
       http_get_security (con);
-      kick_not_connected (con, "Security.txt delivered");
+      kick_not_connected (con, req->path, "Security.txt delivered");
       return;
     } else if ((ntripcaster_strncmp(req->path, "/admin", 6) == 0)) {
 /*      char secfile[BUFSIZE];
@@ -238,14 +238,14 @@ void http_client_login(connection_t *con, ntrip_request_t *req) {
 
       if (http_admin_command (con, req)) {
         xa_debug (2, "DEBUG: kicking %s, executed admin command", con_host (con));
-        kick_not_connected (con, "Executed admin command");
+        kick_not_connected (con, req->path, "Executed admin command");
       } else
-        kick_not_connected (con, "Failed to execute admin command");
+        kick_not_connected (con, req->path, "Failed to execute admin command");
       return;
     }
 
     ntrip_write_message(con, HTTP_FORBIDDEN, get_formatted_time(HEADER_TIME, time), req->path, "text/html");
-    kick_not_connected (con, "No NTRIP client");
+    kick_not_connected (con, req->path, "No NTRIP client");
     return;
   }
 
@@ -261,7 +261,7 @@ void http_client_login(connection_t *con, ntrip_request_t *req) {
     thread_mutex_unlock (&info.double_mutex);
 
     ntrip_write_message(con, HTTP_GET_NOT_AUTHORIZED, get_formatted_time(HEADER_TIME, time), req->path, "text/html");
-    kick_not_connected (con, "Not authorized");
+    kick_not_connected (con, req->path, "Not authorized");
     return;
   }
 
@@ -276,7 +276,7 @@ void http_client_login(connection_t *con, ntrip_request_t *req) {
     else
       send_sourcetable(con);
     //xa_debug (1, "DEBUG: http_client_login(): Try kicking with no existing mountpoint");
-    kick_not_connected (con, "No existing mountpoint");
+    kick_not_connected (con, req->path, "No existing mountpoint");
     //xa_debug (1, "DEBUG: http_client_login(): end");
     return;
   } else {
@@ -292,14 +292,14 @@ void http_client_login(connection_t *con, ntrip_request_t *req) {
         xa_debug (1, "ERROR: Erroneous number of clients, what the hell is going on?");
 
       ntrip_write_message(con, HTTP_SERVICE_UNAVAILABLE, get_formatted_time(HEADER_TIME, time));
-      kick_not_connected (con, "Server Full (too many listeners)");
+      kick_not_connected (con, req->path, "Server Full (too many listeners)");
       return;
     } else if (!check_ip_restrictions(con)) {
       thread_mutex_unlock (&info.source_mutex);
       thread_mutex_unlock (&info.double_mutex);
 
       ntrip_write_message(con, HTTP_SERVICE_UNAVAILABLE, get_formatted_time(HEADER_TIME, time));
-      kick_not_connected (con, "Server Full (too many accesses from IP)");
+      kick_not_connected (con, req->path, "Server Full (too many accesses from IP)");
       return;
     }
 
@@ -307,7 +307,7 @@ void http_client_login(connection_t *con, ntrip_request_t *req) {
       thread_mutex_unlock (&info.source_mutex);
       thread_mutex_unlock (&info.double_mutex);
       ntrip_write_message(con, HTTP_SERVICE_UNAVAILABLE, get_formatted_time(HEADER_TIME, time));
-      kick_not_connected (con, "No more connections allowed for group");
+      kick_not_connected (con, req->path, "No more connections allowed for group");
       return;
     }
 

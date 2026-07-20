@@ -658,7 +658,7 @@ int rtsp_play(connection_t *con, ntrip_request_t *req) {
       thread_mutex_unlock (&info.double_mutex);
 
       ntrip_write_message(con, HTTP_SERVICE_UNAVAILABLE, get_formatted_time(HEADER_TIME, time));
-      kick_not_connected (con, "Server Full (too many accesses from IP)");
+      kick_not_connected (con, req->path, "Server Full (too many accesses from IP)");
       return 0;
     }
 

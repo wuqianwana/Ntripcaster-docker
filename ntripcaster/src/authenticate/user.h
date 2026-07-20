@@ -46,7 +46,6 @@ usertree_t *create_user_tree();
 void free_user_tree(usertree_t * ut);
 int user_authenticate(char *cuser, const char *password);
 ntripcaster_user_t *find_user_from_tree(usertree_t * ut, char *name);
-ntripcaster_user_t *con_get_user(connection_t * con);
 void con_display_users(com_request_t * req);
 void html_display_users(com_request_t *req);
 int runtime_add_user(char *name, char *password);

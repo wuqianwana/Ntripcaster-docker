@@ -42,13 +42,8 @@ typedef avl_tree usertree_t;
 typedef avl_tree grouptree_t;
 typedef avl_tree mounttree_t;
 
-typedef struct userSt {
-  char *name;
-  char *pass;
-} ntripcaster_user_t;
-
 typedef struct groupSt {
-  char *name;
+  const char *name;
   int max_num_con; // maximal number of allowed simultaneous connections
   int max_num_ip; // maximal number of allowed simultaneous connections per ip
   usertree_t *usertree;

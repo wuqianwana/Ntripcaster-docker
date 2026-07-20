@@ -2,7 +2,7 @@
 
 Summary:        BKG professional Ntrip caster - Streaming DGPS data server
 Name:           ntripcaster
-Version:        2.0.48
+Version:        2.0.49
 Release:        1
 Packager:       Dirk Stöcker <ntripcaster@dstoecker.de>
 Group:          Productivity/Other

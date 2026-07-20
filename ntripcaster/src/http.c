@@ -396,14 +396,14 @@ int http_admin_command (connection_t *con, ntrip_request_t *req)
   if (!sock_check_libwrap (con->sock, admin_e))
   {
     write_http_code_page (con, 403, "Forbidden");
-    kick_not_connected(con, "Access denied (libwrap (admin connection))");
+    kick_not_connected(con, req->path, "Access denied (libwrap (admin connection))");
     thread_exit(0);
   }
 #endif
   if (!allowed(con, admin_e) || !info.allow_http_admin)
   {
     write_http_code_page (con, 403, "Forbidden");
-    kick_not_connected(con, "Access denied (internal acl list (admin connection))");
+    kick_not_connected(con, req->path, "Access denied (internal acl list (admin connection))");
     thread_exit(0);
   }
 

@@ -162,6 +162,61 @@ int password_match(const char *crypted, const char *uncrypted)
   return 0;
 }
 
+ntripcaster_user_t *con_get_user(connection_t * con) {
+  ntripcaster_user_t *outuser = NULL;
+  const char *cauth;
+  char *decoded, *ptr;
+  char cryptype[BUFSIZE];
+  char user[BUFSIZE];
+  char auth[BUFSIZE];
+  char pass[BUFSIZE];
+
+  if (con == NULL) {
+    xa_debug(1, "WARNING: con_get_user() called with NULL pointer");
+    return NULL;
+  }
+
+  cauth = get_con_variable(con, "Authorization");
+
+  if (cauth == NULL) return NULL;
+
+  strcpy(auth, cauth);
+
+  if (splitc(cryptype, auth, ' ') == NULL) {
+    xa_debug(1, "DEBUG: con_get_user() uncrypted: [%s]", auth);
+    if (splitc(user, auth, ':') == NULL) {
+      strcpy(user, auth);
+      pass[0] = '\0';
+    } else {
+      strcpy(pass, auth);
+    }
+  } else {
+    if (strncasecmp(cryptype, "basic", 5) == 0) {
+      xa_debug(1, "DEBUG: con_get_user() decoding: [%s]", auth);
+      ptr = decoded = util_base64_decode(auth);
+      if (decoded != NULL) {
+        xa_debug(1, "DEBUG: con_get_user() decoded: [%s]", decoded);
+        if (splitc(user, decoded, ':') == NULL) {
+          strcpy(user, decoded);
+          pass[0] = '\0';
+        } else {
+          strcpy(pass, decoded);
+        }
+        free(ptr);
+      } else return NULL;
+    } else {
+      xa_debug(1, "WARNING: con_get_user(): unsupported cryptype");
+      return NULL;
+    }
+  }
+
+  outuser = (ntripcaster_user_t *)nmalloc(sizeof(ntripcaster_user_t));
+  outuser->name = strdup(user);
+  outuser->pass = strdup(pass);
+
+  return outuser;
+}
+
 void
 print_admin (void *data, void *param)
 {
@@ -545,12 +600,24 @@ close_connection(void *data)
 }
 
 void
-kick_not_connected (connection_t *con, char *reason)
+kick_not_connected (connection_t *con, const char *path, const char *reason)
 {
   char timebuf[BUFSIZE];
   char typebuf[10];
 
-  if (reason) write_log (LOG_DEFAULT, "Kicking %s %d [%s] [%s], connected for %s", type_of_str (con->type, typebuf), con->id, con_host (con), reason, nntripcaster_time (get_time () - con->connect_time, timebuf));
+  if (reason) {
+    ntripcaster_user_t *u = con_get_user(con);
+
+    write_log (LOG_DEFAULT, "Kicking %s %d [%s] [%s], connected for %s%s%s%s%s", type_of_str (con->type, typebuf),
+               con->id, con_host (con), reason, nntripcaster_time (get_time () - con->connect_time, timebuf),
+               u ? ", user " : "", u ? u->name : "", path ? ", path " : "", path ? path : "");
+    if(u != NULL)
+    {
+      nfree(u->name);
+      nfree(u->pass);
+      nfree(u);
+    }
+  }
 
   free_con (con);
 
@@ -1035,8 +1102,8 @@ char *
 connect_average (unsigned long int minutes, unsigned long int connections, char *buf)
 {
   if (!connections)
-    return nntripcaster_time_minutes (minutes, buf);
-  return nntripcaster_time_minutes ((unsigned long int)((double) minutes  / (double) connections), buf);
+    return ntripcaster_time_minutes (minutes, buf);
+  return ntripcaster_time_minutes ((unsigned long int)((double) minutes  / (double) connections), buf);
 }
 
 
