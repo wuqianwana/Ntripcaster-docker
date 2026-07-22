@@ -1,7 +1,7 @@
 # Ntripcaster-docker
 此项目是由BGK开源NTRIP Caster在Docker下运行
 
-目前使用的BKG-Ntripcaster版本为2.0.47（2025-01-07）
+目前使用的BKG-Ntripcaster版本为2.0.49（2026-06）
 
 该存储库包含在 docker 下运行的 BKG NTRIP 播发器。
 
