@@ -1,8 +1,6 @@
 name: Build and Push Docker Image to DockerHub
 
 on:
-  push:
-    branches: [ main ]
   # 手动运行 + 自定义版本输入框
   workflow_dispatch:
     inputs:
