@@ -22,7 +22,12 @@ RUN make install
 # 运行镜像阶段
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
-# 设置北京时间时区，日志、时间统一为国内时区
+ENV TZ=Asia/Shanghai
+# 安装时区数据文件，保证zoneinfo目录存在，软链接可生效
+RUN apt-get update \
+    && apt-get install -y tzdata \
+    && rm -rf /var/lib/apt/lists/*
+# 设置系统时区为北京时间，适配直接读取/etc/localtime的ntripcaster程序
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # 拷贝编译好的程序
@@ -34,5 +39,5 @@ EXPOSE 2101
 WORKDIR /usr/local/ntripcaster/logs
 # 配置持久化目录
 VOLUME /etc/ntripcaster
-# 启动命令和你原有逻辑保持一致
+# 启动命令和原有逻辑保持一致
 CMD [ "/usr/local/ntripcaster/sbin/ntripdaemon", "-d", "/etc/ntripcaster" ]
